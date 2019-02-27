@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">DrinkApp</string>
+    <string name="FACEBOOK_APP_ID">577367206113818</string>
+    <string name="ACCOUNT_KIT_CLIENT_TOKEN">068646d7a96bf13f493de169df39376c</string>
+
 </resources>

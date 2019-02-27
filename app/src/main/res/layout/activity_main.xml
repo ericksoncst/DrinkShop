@@ -10,7 +10,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/btn_continur"
+        android:id="@+id/btn_continue"
         android:text="Continue"
         android:layout_alignParentBottom="true"
         android:background="@color/colorPrimaryDark"/>

@@ -12,7 +12,7 @@ public interface IDrinkShopAPI {
 
     @FormUrlEncoded
     @POST("checkuser.php")
-    Call<CheckUserResponse> checkUserExixsts(@Field("phone") String phone);
+    Call<CheckUserResponse> checkUserExists(@Field("phone") String phone);
 
     @FormUrlEncoded
     @POST("register.php")
