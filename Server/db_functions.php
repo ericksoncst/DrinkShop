@@ -45,6 +45,30 @@ class DB_Functions {
             return false;
         }
     }
+
+    public function getUserInformation($phone) {
+        $stmt = $this->conn->prepare("SELECT * FROM user WHERE phone=?");
+        $stmt->bind_param("s",$phone);
+
+        if ($stmt->execute()) {
+            $user = $stmt->get_result()->fetch_assoc();
+            $stmt->close();
+
+            return $user;
+        } else {
+            return null;
+        }
+    }
+
+    public function getBanners() {
+        $result = $this->conn->query("SELECT * FROM banner ORDER BY id LIMIT 3");
+
+        $banners = array();
+
+        while ($item = $result->fetch_assoc()) 
+            $banners[] = $item;
+        return $banners;        
+    }
 }
 
 ?>
