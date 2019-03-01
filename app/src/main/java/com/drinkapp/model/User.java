@@ -1,11 +1,24 @@
 package com.drinkapp.model;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 public class User {
 
+    @Expose
+    @SerializedName("phone")
     private String phone;
+    @Expose
+    @SerializedName("name")
     private String name;
+    @Expose
+    @SerializedName("birthdate")
     private String birthdate;
+    @Expose
+    @SerializedName("address")
     private String address;
+    @Expose
+    @SerializedName("error_msg")
     private String error_msg;
 
     public User() {

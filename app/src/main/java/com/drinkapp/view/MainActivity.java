@@ -1,10 +1,11 @@
 package com.drinkapp.view;
 
+
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,7 +15,7 @@ import android.widget.Toast;
 
 import com.drinkapp.R;
 import com.drinkapp.Retrofit.IDrinkShopAPI;
-import com.drinkapp.Utils.Commom;
+import com.drinkapp.Utils.Common;
 import com.drinkapp.model.CheckUserResponse;
 import com.drinkapp.model.User;
 import com.facebook.accountkit.Account;
@@ -28,7 +29,10 @@ import com.facebook.accountkit.ui.LoginType;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.szagurskii.patternedtextwatcher.PatternedTextWatcher;
 
+import java.io.IOException;
+
 import dmax.dialog.SpotsDialog;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -44,7 +48,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mService = Commom.getApi();
+        mService = Common.getApi();
+
 
         btn_continue = findViewById(R.id.btn_continue);
         btn_continue.setOnClickListener(new View.OnClickListener() {
@@ -54,6 +59,69 @@ public class MainActivity extends AppCompatActivity {
                 startLoginPage(LoginType.PHONE);
             }
         });
+
+
+        if (AccountKit.getCurrentAccessToken() != null) {
+
+            AccountKit.getCurrentAccount(new AccountKitCallback<Account>() {
+                @Override
+                public void onSuccess(final Account account) {
+
+                    final AlertDialog alertDialog = new SpotsDialog(MainActivity.this);
+                    alertDialog.show();
+                    alertDialog.setMessage("Please Waiting...");
+
+
+                    mService.checkUserExists(account.getPhoneNumber().toString())
+                            .enqueue(new Callback<CheckUserResponse>() {
+                                @Override
+                                public void onResponse(Call<CheckUserResponse> call, Response<CheckUserResponse> response) {
+                                    CheckUserResponse userResponse = response.body();
+
+                                    if (userResponse.isExists()) {
+
+                                        mService.getUserInformation(account.getPhoneNumber().toString())
+                                                .enqueue(new Callback<User>() {
+                                                    @Override
+                                                    public void onResponse(Call<User> call, Response<User> response) {
+
+                                                        alertDialog.dismiss();
+
+                                                        Common.currentUser = response.body();
+
+                                                        startActivity(new Intent(MainActivity.this, HomeActivity.class));
+                                                        finish();
+
+                                                    }
+
+                                                    @Override
+                                                    public void onFailure(Call<User> call, Throwable t) {
+                                                        Toast.makeText(MainActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+
+                                    } else {
+                                        alertDialog.dismiss();
+
+                                        showRegisterDialog(account.getPhoneNumber().toString());
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<CheckUserResponse> call, Throwable t) {
+
+                                }
+                            });
+                }
+
+                @Override
+                public void onError(AccountKitError accountKitError) {
+                    Log.d("ERROR", accountKitError.getErrorType().getMessage());
+                }
+            });
+
+
+        }
 
     }
 
@@ -95,12 +163,29 @@ public class MainActivity extends AppCompatActivity {
                                     .enqueue(new Callback<CheckUserResponse>() {
                                         @Override
                                         public void onResponse(Call<CheckUserResponse> call, Response<CheckUserResponse> response) {
-                                            Log.d("RESPONSEEEEEE", response.toString());
                                             CheckUserResponse userResponse = response.body();
-                                            Log.i("RESPONSEEEE", userResponse.toString());
 
                                             if (userResponse.isExists()) {
-                                                alertDialog.dismiss();
+
+                                                mService.getUserInformation(account.getPhoneNumber().toString())
+                                                        .enqueue(new Callback<User>() {
+                                                            @Override
+                                                            public void onResponse(Call<User> call, Response<User> response) {
+
+                                                                alertDialog.dismiss();
+
+                                                                User user = response.body();
+
+                                                                startActivity(new Intent(MainActivity.this, HomeActivity.class));
+                                                                finish();
+
+                                                            }
+
+                                                            @Override
+                                                            public void onFailure(Call<User> call, Throwable t) {
+                                                                Toast.makeText(MainActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                                            }
+                                                        });
 
                                             } else {
                                                 alertDialog.dismiss();
@@ -181,8 +266,13 @@ public class MainActivity extends AppCompatActivity {
                                 watingDialog.dismiss();
 
                                 User user = response.body();
+
                                 if (TextUtils.isEmpty(user.getError_msg())) {
                                     Toast.makeText(MainActivity.this, "User Registered successfully!", Toast.LENGTH_SHORT).show();
+                                    Common.currentUser = response.body();
+
+                                    startActivity(new Intent(MainActivity.this, HomeActivity.class));
+                                    finish();
                                 }
                             }
 
@@ -202,7 +292,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 }
-
 
 
 
