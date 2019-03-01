@@ -29,10 +29,7 @@ import com.facebook.accountkit.ui.LoginType;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.szagurskii.patternedtextwatcher.PatternedTextWatcher;
 
-import java.io.IOException;
-
 import dmax.dialog.SpotsDialog;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -174,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
 
                                                                 alertDialog.dismiss();
 
-                                                                User user = response.body();
+                                                                Common.currentUser = response.body();
 
                                                                 startActivity(new Intent(MainActivity.this, HomeActivity.class));
                                                                 finish();

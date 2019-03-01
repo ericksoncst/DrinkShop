@@ -69,6 +69,16 @@ class DB_Functions {
             $banners[] = $item;
         return $banners;        
     }
+
+     public function getMenu() {
+        $result = $this->conn->query("SELECT * FROM menu");
+
+        $menu = array();
+
+        while ($item = $result->fetch_assoc()) 
+            $menu[] = $item;
+        return $menu;        
+    }
 }
 
 ?>

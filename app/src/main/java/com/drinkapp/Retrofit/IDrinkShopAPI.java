@@ -1,13 +1,13 @@
 package com.drinkapp.Retrofit;
 
 import com.drinkapp.model.Banner;
+import com.drinkapp.model.Category;
 import com.drinkapp.model.CheckUserResponse;
 import com.drinkapp.model.User;
 
 import java.util.List;
 
 import io.reactivex.Observable;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -33,5 +33,8 @@ public interface IDrinkShopAPI {
 
     @GET("getbanners.php")
     Observable<List<Banner>> getBanners();
+
+    @GET("getmenu.php")
+    Observable<List<Category>> getMenu();
 
 }
