@@ -3,6 +3,7 @@ package com.drinkapp.Adapter;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,6 +14,8 @@ public class DrinkViewHolder extends RecyclerView.ViewHolder implements View.OnC
 
     ImageView iv_drink_product;
     TextView tv_drink_item_name,tv_drink_item_price;
+
+    Button btn_add_cart;
 
     ItemClickListenner itemClickListenner;
 
@@ -26,6 +29,7 @@ public class DrinkViewHolder extends RecyclerView.ViewHolder implements View.OnC
         iv_drink_product = itemView.findViewById(R.id.iv_drink_product);
         tv_drink_item_name = itemView.findViewById(R.id.tv_drink_item_name);
         tv_drink_item_price = itemView.findViewById(R.id.tv_drink_item_price);
+        btn_add_cart = itemView.findViewById(R.id.btn_add_cart);
 
         itemView.setOnClickListener(this);
 
