@@ -70,7 +70,7 @@ class DB_Functions {
         return $banners;        
     }
 
-     public function getMenu() {
+    public function getMenu() {
         $result = $this->conn->query("SELECT * FROM menu");
 
         $menu = array();
@@ -78,6 +78,18 @@ class DB_Functions {
         while ($item = $result->fetch_assoc()) 
             $menu[] = $item;
         return $menu;        
+    }
+
+    public function getDrinkByMenuId($menuId) {
+
+        $query = "SELECT * FROM drink WHERE menuId = '".$menuId."'";
+        $result = $this->conn->query($query);
+
+        $drinks = array();
+
+        while ($item = $result->fetch_assoc()) 
+            $drinks[] = $item;
+        return $drinks;        
     }
 }
 

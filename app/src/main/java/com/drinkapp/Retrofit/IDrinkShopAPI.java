@@ -3,6 +3,7 @@ package com.drinkapp.Retrofit;
 import com.drinkapp.model.Banner;
 import com.drinkapp.model.Category;
 import com.drinkapp.model.CheckUserResponse;
+import com.drinkapp.model.Drink;
 import com.drinkapp.model.User;
 
 import java.util.List;
@@ -36,5 +37,9 @@ public interface IDrinkShopAPI {
 
     @GET("getmenu.php")
     Observable<List<Category>> getMenu();
+
+    @FormUrlEncoded
+    @POST("getdrink.php")
+    Observable<List<Drink>> getDrink(@Field("menuId") String menuId);
 
 }
