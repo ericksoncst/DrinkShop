@@ -1,5 +1,7 @@
 package com.drinkapp.Utils;
 
+import com.drinkapp.Database.DataSource.CartRepository;
+import com.drinkapp.Database.Local.CartDatabase;
 import com.drinkapp.Retrofit.IDrinkShopAPI;
 import com.drinkapp.Retrofit.RetrofitClient;
 import com.drinkapp.model.Category;
@@ -21,10 +23,14 @@ public class Common {
     public static List<Drink> toppingList = new ArrayList<>();
     public static final String TOPPING_MENU_ID = "7";
     public static double toppingPrice = 0.0;
+
     public static List<String> toppingAdded = new ArrayList<>();
     public static int sizeOfCup = -1;
     public static int ice = -1;
     public static int sugar = -1;
+
+    public static CartDatabase cartDatabase;
+    public static CartRepository cartRepository;
 
     public static IDrinkShopAPI getApi() {
         return RetrofitClient.getClient(BASE_URL).create(IDrinkShopAPI.class);

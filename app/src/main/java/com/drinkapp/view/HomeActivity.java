@@ -20,6 +20,9 @@ import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.drinkapp.Adapter.CategoryAdapter;
+import com.drinkapp.Database.DataSource.CartRepository;
+import com.drinkapp.Database.Local.CartDataSource;
+import com.drinkapp.Database.Local.CartDatabase;
 import com.drinkapp.R;
 import com.drinkapp.Retrofit.IDrinkShopAPI;
 import com.drinkapp.Utils.Common;
@@ -30,7 +33,6 @@ import com.drinkapp.model.Drink;
 import java.util.HashMap;
 import java.util.List;
 
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
@@ -93,7 +95,13 @@ public class HomeActivity extends AppCompatActivity
         getBannerImage();
         getMenu();
         getToppingList();
+        initDB();
         
+    }
+
+    private void initDB() {
+        Common.cartDatabase = CartDatabase.getInstance(this);
+        Common.cartRepository = CartRepository.getInstance(CartDataSource.getInstance(Common.cartDatabase.cartDao()));
     }
 
     private void getToppingList() {

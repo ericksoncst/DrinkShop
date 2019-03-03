@@ -4,9 +4,11 @@ import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,10 +20,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
+import com.drinkapp.Database.ModelDb.Cart;
 import com.drinkapp.Interface.ItemClickListenner;
 import com.drinkapp.R;
 import com.drinkapp.Utils.Common;
 import com.drinkapp.model.Drink;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -223,7 +227,7 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkViewHolder> {
                     return;
                 }
 
-                showConfirmDialog(position, tv_count.getNumber(), Common.sizeOfCup, Common.sugar, Common.ice);
+                showConfirmDialog(position, tv_count.getNumber());
                 dialog.dismiss();
             }
         });
@@ -231,17 +235,17 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkViewHolder> {
         builder.show();
     }
 
-    private void showConfirmDialog(int position, String number, int sizeOfCup, int sugar, int ice) {
+    private void showConfirmDialog(int position, final String number) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         View itemView = LayoutInflater.from(context)
                 .inflate(R.layout.confirm_add_to_cart_layout, null);
 
         ImageView iv_confirm_product = itemView.findViewById(R.id.iv_confirm_product);
-        TextView tv_product_confirm_name = itemView.findViewById(R.id.tv_product_confirm_name);
+        final TextView tv_product_confirm_name = itemView.findViewById(R.id.tv_product_confirm_name);
         TextView tv_product_confirm_price = itemView.findViewById(R.id.tv_product_confirm_price);
         TextView tv_sugar = itemView.findViewById(R.id.tv_sugar);
         TextView tv_ice = itemView.findViewById(R.id.tv_ice);
-        TextView tv_topping_extras = itemView.findViewById(R.id.tv_topping_extras);
+        final TextView tv_topping_extras = itemView.findViewById(R.id.tv_topping_extras);
 
         Picasso.with(context).load(drinkList.get(position).link).into(iv_confirm_product);
         tv_product_confirm_name.setText(new StringBuilder(drinkList.get(position).name).append(" x")
@@ -264,11 +268,34 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkViewHolder> {
 
         tv_topping_extras.setText(topping_final_comment);
 
+        final double finalPrice = price;
         builder.setNegativeButton("CONFIRM", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
                 dialog.dismiss();
+
+                try {
+
+                    Cart cartItem = new Cart();
+                    cartItem.name = tv_product_confirm_name.getText().toString();
+                    cartItem.amount = Integer.parseInt(number);
+                    cartItem.ice = Common.ice;
+                    cartItem.sugar = Common.sugar;
+                    cartItem.price = finalPrice;
+                    cartItem.toppingExtras = tv_topping_extras.getText().toString();
+
+                    Common.cartRepository.insertToCart(cartItem);
+
+                    Log.d("DEBUUUUUUG", new Gson().toJson(cartItem));
+
+                    Toast.makeText(context, "Item Saved Successfully", Toast.LENGTH_SHORT).show();
+
+                } catch(Exception e) {
+                    Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+
+
             }
         });
 
