@@ -25,6 +25,7 @@ import com.drinkapp.Retrofit.IDrinkShopAPI;
 import com.drinkapp.Utils.Common;
 import com.drinkapp.model.Banner;
 import com.drinkapp.model.Category;
+import com.drinkapp.model.Drink;
 
 import java.util.HashMap;
 import java.util.List;
@@ -91,7 +92,20 @@ public class HomeActivity extends AppCompatActivity
 
         getBannerImage();
         getMenu();
+        getToppingList();
         
+    }
+
+    private void getToppingList() {
+        compositeDisposable.add(mService.getDrink(Common.TOPPING_MENU_ID)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<Drink>>() {
+                    @Override
+                    public void accept(List<Drink> drinks) throws Exception {
+                        Common.toppingList = drinks;
+                    }
+                }));
     }
 
     private void getMenu() {

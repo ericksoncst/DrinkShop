@@ -5,10 +5,12 @@ import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -18,6 +20,7 @@ import android.widget.Toast;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.drinkapp.Interface.ItemClickListenner;
 import com.drinkapp.R;
+import com.drinkapp.Utils.Common;
 import com.drinkapp.model.Drink;
 import com.squareup.picasso.Picasso;
 
@@ -66,19 +69,35 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkViewHolder> {
         });
     }
 
-    private void showAddToCartDialog(int position) {
+    private void showAddToCartDialog(final int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         View itemView = LayoutInflater.from(context)
                 .inflate(R.layout.add_to_cart_layout, null);
 
         ImageView iv_cart_product = itemView.findViewById(R.id.iv_cart_product);
-        ElegantNumberButton tv_count = itemView.findViewById(R.id.tv_count);
+        final ElegantNumberButton tv_count = itemView.findViewById(R.id.tv_count);
         TextView tv_product_cart_name = itemView.findViewById(R.id.tv_product_cart_name);
 
-        EditText tv_comment = itemView.findViewById(R.id.tv_comment);
+        final EditText tv_comment = itemView.findViewById(R.id.tv_comment);
 
         RadioButton rb_sizeM = itemView.findViewById(R.id.rb_sizeM);
         RadioButton rb_sizeL = itemView.findViewById(R.id.rb_sizeL);
+
+        rb_sizeM.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                    Common.sizeOfCup = 0;
+            }
+        });
+
+        rb_sizeL.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                    Common.sizeOfCup = 1;
+            }
+        });
 
         RadioButton rb_sugar_100 = itemView.findViewById(R.id.rb_sugar_100);
         RadioButton rb_sugar_70 = itemView.findViewById(R.id.rb_sugar_70);
@@ -86,11 +105,98 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkViewHolder> {
         RadioButton rb_sugar_30 = itemView.findViewById(R.id.rb_sugar_30);
         RadioButton rb_sugar_free = itemView.findViewById(R.id.rb_sugar_free);
 
+        rb_sugar_30.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                    Common.sugar = 30;
+            }
+        });
+
+        rb_sugar_50.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                    Common.sugar = 50;
+            }
+        });
+
+        rb_sugar_70.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                    Common.sugar = 70;
+            }
+        });
+
+        rb_sugar_100.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                    Common.sugar = 100;
+            }
+        });
+
+        rb_sugar_free.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                    Common.sugar = 0;
+            }
+        });
+
         RadioButton rb_ice_100 = itemView.findViewById(R.id.rb_ice_100);
         RadioButton rb_ice_70 = itemView.findViewById(R.id.rb_ice_70);
         RadioButton rb_ice_50 = itemView.findViewById(R.id.rb_ice_50);
         RadioButton rb_ice_30 = itemView.findViewById(R.id.rb_ice_30);
         RadioButton rb_ice_free = itemView.findViewById(R.id.rb_ice_free);
+
+        rb_ice_30.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                    Common.ice = 30;
+            }
+        });
+
+        rb_ice_50.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                    Common.ice = 50;
+            }
+        });
+
+        rb_ice_70.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                    Common.ice = 70;
+            }
+        });
+
+        rb_ice_100.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                    Common.ice = 100;
+            }
+        });
+
+        rb_ice_free.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                    Common.ice = 0;
+            }
+        });
+
+        RecyclerView rv_topping = itemView.findViewById(R.id.rv_topping);
+        rv_topping.setLayoutManager(new LinearLayoutManager(context));
+        rv_topping.setHasFixedSize(true);
+
+        MultiChoiceAdapter adapter = new MultiChoiceAdapter(context, Common.toppingList);
+        rv_topping.setAdapter(adapter);
 
         Picasso.with(context)
                 .load(drinkList.get(position).link)
@@ -101,12 +207,75 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkViewHolder> {
         builder.setNegativeButton("ADD TO CART", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+
+                if (Common.sizeOfCup == -1) {
+                    Toast.makeText(context, "Please choose your size cup", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (Common.sugar == -1) {
+                    Toast.makeText(context, "Please choose sugar", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (Common.ice == -1) {
+                    Toast.makeText(context, "Please choose ice", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                showConfirmDialog(position, tv_count.getNumber(), Common.sizeOfCup, Common.sugar, Common.ice);
                 dialog.dismiss();
             }
         });
 
         builder.show();
     }
+
+    private void showConfirmDialog(int position, String number, int sizeOfCup, int sugar, int ice) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        View itemView = LayoutInflater.from(context)
+                .inflate(R.layout.confirm_add_to_cart_layout, null);
+
+        ImageView iv_confirm_product = itemView.findViewById(R.id.iv_confirm_product);
+        TextView tv_product_confirm_name = itemView.findViewById(R.id.tv_product_confirm_name);
+        TextView tv_product_confirm_price = itemView.findViewById(R.id.tv_product_confirm_price);
+        TextView tv_sugar = itemView.findViewById(R.id.tv_sugar);
+        TextView tv_ice = itemView.findViewById(R.id.tv_ice);
+        TextView tv_topping_extras = itemView.findViewById(R.id.tv_topping_extras);
+
+        Picasso.with(context).load(drinkList.get(position).link).into(iv_confirm_product);
+        tv_product_confirm_name.setText(new StringBuilder(drinkList.get(position).name).append(" x")
+        .append(number)
+        .append(Common.sizeOfCup == 0 ? "Size M" : "Size L").toString());
+
+        tv_ice.setText(new StringBuilder("Ice: ").append(Common.ice).append("%").toString());
+        tv_sugar.setText(new StringBuilder("Sugar: ").append(Common.sugar).append("%").toString());
+
+        double price = (Double.parseDouble(drinkList.get(position).price)* Double.parseDouble(number)) + Common.toppingPrice;
+
+        if (Common.sizeOfCup == 1)
+            price+=3.0;
+
+        tv_product_confirm_price.setText(new StringBuilder("$").append(price));
+
+        StringBuilder topping_final_comment = new StringBuilder("");
+        for(String line: Common.toppingAdded)
+            topping_final_comment.append(line).append("\n");
+
+        tv_topping_extras.setText(topping_final_comment);
+
+        builder.setNegativeButton("CONFIRM", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                dialog.dismiss();
+            }
+        });
+
+        builder.setView(itemView);
+        builder.show();
+    }
+
 
     @Override
     public int getItemCount() {
