@@ -29,6 +29,7 @@ import com.drinkapp.Utils.Common;
 import com.drinkapp.model.Banner;
 import com.drinkapp.model.Category;
 import com.drinkapp.model.Drink;
+import com.nex3z.notificationbadge.NotificationBadge;
 
 import java.util.HashMap;
 import java.util.List;
@@ -50,6 +51,8 @@ public class HomeActivity extends AppCompatActivity
 
     //RXJAVA
     CompositeDisposable compositeDisposable = new CompositeDisposable();
+
+    NotificationBadge badge;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -181,8 +184,27 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.home, menu);
+        getMenuInflater().inflate(R.menu.menu_action_bar, menu);
+        View view = menu.findItem(R.id.cart_menu).getActionView();
+        badge = view.findViewById(R.id.badge);
+        updateCartCount();
         return true;
+    }
+
+    private void updateCartCount() {
+        if(badge == null) return;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (Common.cartRepository.countCartItens() == 0)
+                    badge.setVisibility(View.INVISIBLE);
+                else
+                {
+                    badge.setVisibility(View.VISIBLE);
+                    badge.setText(String.valueOf(Common.cartRepository.countCartItens()));
+                }
+            }
+        });
     }
 
     @Override
@@ -193,7 +215,7 @@ public class HomeActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.cart_menu) {
             return true;
         }
 
@@ -223,5 +245,11 @@ public class HomeActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateCartCount();
     }
 }
