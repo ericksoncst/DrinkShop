@@ -12,7 +12,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".view.DrinkActivity"></activity>
+        <activity android:name=".view.CartActivity"></activity>
+        <activity android:name=".view.DrinkActivity" />
         <activity
             android:name=".view.HomeActivity"
             android:label="@string/title_activity_home"

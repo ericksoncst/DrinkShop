@@ -1,5 +1,6 @@
 package com.drinkapp.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -14,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.daimajia.slider.library.SliderLayout;
@@ -53,6 +55,8 @@ public class HomeActivity extends AppCompatActivity
     CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     NotificationBadge badge;
+
+    ImageView cart_icon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -187,6 +191,15 @@ public class HomeActivity extends AppCompatActivity
         getMenuInflater().inflate(R.menu.menu_action_bar, menu);
         View view = menu.findItem(R.id.cart_menu).getActionView();
         badge = view.findViewById(R.id.badge);
+        cart_icon = view.findViewById(R.id.cart_icon);
+
+        cart_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(HomeActivity.this, CartActivity.class));
+            }
+        });
+
         updateCartCount();
         return true;
     }
