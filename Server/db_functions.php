@@ -91,6 +91,10 @@ class DB_Functions {
             $drinks[] = $item;
         return $drinks;        
     }
+
+    public function updateAvatar($phone,$fileName) {
+        return $result = $this->conn->query("UPDATE user SET avatarUrl='$fileName' WHERE phone='$phone'");
+    }
 }
 
 ?>

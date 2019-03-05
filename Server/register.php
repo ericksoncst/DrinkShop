@@ -21,10 +21,10 @@
             $user = $db->registerNewUser($phone,$name,$birthdate,$address);
 
             if ($user) {
-                $response["Phone"] = $user["phone"];
-                $response["Name"] = $user["name"];
-                $response["Birthdate"] = $user["birthdate"];
-                $response["Address"] = $user["address"];
+                $response["phone"] = $user["phone"];
+                $response["name"] = $user["name"];
+                $response["birthdate"] = $user["birthdate"];
+                $response["address"] = $user["address"];
                 echo json_encode($response);
             } else {
                 $response["error_msg"] = "Unknow error occurred in registration";
